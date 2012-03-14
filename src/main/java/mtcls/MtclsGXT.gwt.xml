@@ -2,8 +2,8 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.1.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.1.1/distro-source/core/src/gwt-module.dtd">
 <module rename-to="MtclsGXT">
 	<inherits name="com.google.gwt.user.User" />
-	<inherits name="com.com.gxt.extjs.com.gxt.ui.GXT" />
-	<inherits name='com.com.gxt.extjs.com.gxt.themes.Themes' />
+	<inherits name="com.extjs.gxt.ui.GXT" />
+	<inherits name='com.extjs.gxt.themes.Themes' />
 	<inherits name='com.google.gwt.user.theme.standard.Standard'/>
 	<source path="client"/>
 	<source path="common"/>

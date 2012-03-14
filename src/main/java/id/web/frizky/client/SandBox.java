@@ -20,6 +20,20 @@ import com.google.gwt.core.client.EntryPoint;
 public class SandBox implements EntryPoint {
     private Desktop desktop = new Desktop();
     private final DesktopBasedGXT desktopBasedGXT = new DesktopBasedGXT();
+    private final Window accordionWindow = desktopBasedGXT.createAccordionWindow();
+    private final Window gridWindow = desktopBasedGXT.createGridWindow();
+    private final SelectionListener<ComponentEvent> shortcutListener = new SelectionListener<ComponentEvent>() {
+        @Override
+        public void componentSelected(ComponentEvent ce) {
+            itemSelected(ce);
+        }
+    };
+    private final SelectionListener<MenuEvent> menuListener = new SelectionListener<MenuEvent>() {
+        @Override
+        public void componentSelected(MenuEvent me) {
+            itemSelected(me);
+        }
+    };
 
     private void itemSelected(ComponentEvent ce) {
         Window w;
@@ -40,43 +54,39 @@ public class SandBox implements EntryPoint {
     }
 
     public void onModuleLoad() {
-        SelectionListener<MenuEvent> menuListener = new SelectionListener<MenuEvent>() {
-            @Override
-            public void componentSelected(MenuEvent me) {
-                itemSelected(me);
-            }
-        };
-
-        SelectionListener<ComponentEvent> shortcutListener = new SelectionListener<ComponentEvent>() {
-            @Override
-            public void componentSelected(ComponentEvent ce) {
-                itemSelected(ce);
-            }
-        };
-
-        Window gridWindow = desktopBasedGXT.createGridWindow();
-        Window accordionWindow = desktopBasedGXT.createAccordionWindow();
-
-        Shortcut s1 = new Shortcut();
-        s1.setText("Grid Window");
-        s1.setId("grid-win-shortcut");
-        s1.setData("window", gridWindow);
-        s1.addSelectionListener(shortcutListener);
-        desktop.addShortcut(s1);
-
-        Shortcut s2 = new Shortcut();
-        s2.setText("Accordion Window");
-        s2.setId("acc-win-shortcut");
-        s2.setData("window", accordionWindow);
-        s2.addSelectionListener(shortcutListener);
-        desktop.addShortcut(s2);
-
+        createShortcut();
         TaskBar taskBar = desktop.getTaskBar();
 
         StartMenu menu = taskBar.getStartMenu();
         menu.setHeading("Darrell Meyer");
         menu.setIconStyle("user");
+        createMenu(menu);
 
+        // tools
+        MenuItem tool = new MenuItem("Settings");
+        tool.setIcon(IconHelper.createStyle("settings"));
+        tool.addSelectionListener(new SelectionListener<MenuEvent>() {
+            @Override
+            public void componentSelected(MenuEvent ce) {
+                Info.display("Event", "The 'Settings' tool was clicked");
+            }
+        });
+        menu.addTool(tool);
+
+        menu.addToolSeperator();
+
+        tool = new MenuItem("Logout");
+        tool.setIcon(IconHelper.createStyle("logout"));
+        tool.addSelectionListener(new SelectionListener<MenuEvent>() {
+            @Override
+            public void componentSelected(MenuEvent ce) {
+                Info.display("Event", "The 'Logout' tool was clicked");
+            }
+        });
+        menu.addTool(tool);
+    }
+
+    private void createMenu(StartMenu menu) {
         MenuItem menuItem = new MenuItem("Grid Window");
         menuItem.setData("window", gridWindow);
         menuItem.setIcon(IconHelper.createStyle("icon-grid"));
@@ -109,28 +119,21 @@ public class SandBox implements EntryPoint {
 
         menuItem.setSubMenu(sub);
         menu.add(menuItem);
+    }
 
-        // tools
-        MenuItem tool = new MenuItem("Settings");
-        tool.setIcon(IconHelper.createStyle("settings"));
-        tool.addSelectionListener(new SelectionListener<MenuEvent>() {
-            @Override
-            public void componentSelected(MenuEvent ce) {
-                Info.display("Event", "The 'Settings' tool was clicked");
-            }
-        });
-        menu.addTool(tool);
+    private void createShortcut() {
+        Shortcut s1 = new Shortcut();
+        s1.setText("Grid Window");
+        s1.setId("grid-win-shortcut");
+        s1.setData("window", gridWindow);
+        s1.addSelectionListener(shortcutListener);
+        desktop.addShortcut(s1);
 
-        menu.addToolSeperator();
-
-        tool = new MenuItem("Logout");
-        tool.setIcon(IconHelper.createStyle("logout"));
-        tool.addSelectionListener(new SelectionListener<MenuEvent>() {
-            @Override
-            public void componentSelected(MenuEvent ce) {
-                Info.display("Event", "The 'Logout' tool was clicked");
-            }
-        });
-        menu.addTool(tool);
+        Shortcut s2 = new Shortcut();
+        s2.setText("Accordion Window");
+        s2.setId("acc-win-shortcut");
+        s2.setData("window", accordionWindow);
+        s2.addSelectionListener(shortcutListener);
+        desktop.addShortcut(s2);
     }
 }
